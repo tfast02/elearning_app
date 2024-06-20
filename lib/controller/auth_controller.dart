@@ -76,15 +76,27 @@ class AuthController extends GetxController {
           }
         } else {
           // Xác thực không thành công, hiển thị thông báo lỗi trong console
-          print('Login information is incorrect! Please re-enter!');
+          Get.snackbar(
+            'Error',
+            'Email or Password incorrect. Please try again.',
+            snackPosition: SnackPosition.BOTTOM,
+          );
         }
       } else {
         // Xử lý lỗi từ phía server
-        print('Server error: ${response.statusCode}');
+        Get.snackbar(
+          'Error',
+          'Login Failed. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     } catch (e) {
       // Xử lý lỗi kết nối
-      print('Network error: $e');
+      Get.snackbar(
+        'Error',
+        'Login Failed. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
