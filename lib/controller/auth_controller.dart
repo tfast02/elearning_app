@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:vku_app/views/login_screen.dart';
 import 'package:vku_app/controller/api_constants.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
+import 'package:vku_app/views/new_password_screen.dart';
+import 'package:vku_app/views/otp_screen.dart';
 import 'package:vku_app/views/students/home_screen.dart';
 import 'package:vku_app/views/teachers/teacher_home_screen.dart';
 
@@ -17,6 +20,8 @@ class AuthController extends GetxController {
   String teacherName = '';
   String get nameTeacher => teacherName;
 
+  var isLoading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -24,6 +29,7 @@ class AuthController extends GetxController {
     getTeacherInfo();
   }
 
+  // Xử lý đăng nhập
   Future<void> login(TextEditingController emailController,
       TextEditingController passwordController, int selectedRadio) async {
     String email = emailController.text;
@@ -82,6 +88,115 @@ class AuthController extends GetxController {
     }
   }
 
+  // Check Email có tồn tại không. Nếu có chuyển qua OTPScreen, nếu không nhập lại
+  Future<void> checkEmail(String email, int role) async {
+    isLoading.value = true;
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}check/mail'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'email': email,
+        'role': role,
+      }),
+    );
+
+    isLoading.value = false;
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody['status'] == 200) {
+        Get.to(() => OTPScreen(email: email, role: role));
+      } else if (responseBody['errors'] == 404) {
+        Get.snackbar(
+          'Error',
+          'Email not found. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'An error occurred. Please try again later.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  // Gửi OTP về Email
+  Future<void> sendOTP(String email, int role) async {
+    isLoading.value = true;
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}sendmail'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'email': email,
+        'role': role,
+      }),
+    );
+
+    isLoading.value = false;
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody['status'] != 200) {
+        Get.snackbar(
+          'Error',
+          'Failed to send OTP. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'An error occurred. Please try again later.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  // Kiểm tra OTP có trùng với OTP gửi về email không
+  Future<void> verifyOTP(String email, String otp, int role) async {
+    isLoading.value = true;
+
+    final response = await http.post(
+      Uri.parse('${baseUrl}check/otp'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'email': email,
+        'otp_pin': otp,
+      }),
+    );
+
+    isLoading.value = false;
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      if (responseBody['status'] == 400) {
+        Get.to(() => const NewPasswordScreen(), arguments: {'email': email, 'role': role});
+      } else {
+        Get.snackbar(
+          'Error',
+          'Invalid OTP. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } else {
+      Get.snackbar(
+        'Error',
+        'An error occurred. Please try again later.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
   // Lấy thông tin Sinh viên đã lưu trên SharedPreferences
   void getStudentInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -89,6 +204,7 @@ class AuthController extends GetxController {
     update();
   }
 
+  // Lấy thông tin Giảng viên đã lưu trên SharedPreferences
   void getTeacherInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     teacherName = prefs.getString('teacherName') ?? '';

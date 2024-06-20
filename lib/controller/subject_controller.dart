@@ -68,10 +68,13 @@ class SubjectController extends GetxController {
   // ------------------------- STUDENT -------------------------
 
   RxList<dynamic> subjectList = [].obs;
+  RxList<dynamic> subjectInfo = [].obs;
+  RxList<dynamic> subjectInfoContent = [].obs;
   RxList<dynamic> subjectListOfDay = [].obs;
   RxList<dynamic> subjectListSchedule = [].obs;
   RxList<dynamic> projectList = [].obs;
   RxList<dynamic> projectInfoList = [].obs;
+  var sectionId = 0.obs;
   var projectId = 0.obs;
   var projectTitle = ''.obs;
 
@@ -94,6 +97,40 @@ class SubjectController extends GetxController {
     final response = await http.get(Uri.parse('${baseUrl}student/list/semester/subject/$studentId'));
     if (response.statusCode == 200) {
       subjectList.value = json.decode(response.body)['subject'];
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  // Lấy thông tin môn học
+  Future<void> getSubjectInfo() async {
+    final response = await http.get(Uri.parse('${baseUrl}student/detail/subject/${sectionId}'));
+    if (response.statusCode == 200) {
+      var responseBody = json.decode(response.body);
+      var subjectListInfo = responseBody['section'];
+      var subjectListInfoList = responseBody['content'];
+
+      if (subjectListInfo is List) {
+        // Xử lý dữ liệu nếu phản hồi là một danh sách
+        subjectInfo.assignAll(subjectListInfo);
+      } else if (subjectListInfo is Map<String, dynamic>) {
+        // Xử lý dữ liệu nếu phản hồi là một đối tượng
+        subjectInfo.assignAll([subjectListInfo]);
+      } else {
+        throw Exception('Unexpected format for project data');
+      }
+
+      if (subjectListInfoList is List) {
+        // Xử lý dữ liệu nếu phản hồi là một danh sách
+        subjectInfoContent.assignAll(subjectListInfoList);
+      } else if (subjectListInfoList is Map<String, dynamic>) {
+        // Xử lý dữ liệu nếu phản hồi là một đối tượng
+        subjectInfoContent.assignAll([subjectListInfoList]);
+      } else {
+        throw Exception('Unexpected format for project data');
+      }
+      print(subjectInfo);
+      print(subjectInfoContent);
     } else {
       throw Exception('Failed to load data');
     }
@@ -236,7 +273,6 @@ class SubjectController extends GetxController {
       } else {
         throw Exception('Unexpected format for project data');
       }
-      print(subjectInfoTeacher);
     } else {
       throw Exception('Failed to load data');
     }

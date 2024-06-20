@@ -25,7 +25,6 @@ class _TeacherSubjectDetail extends State<TeacherSubjectDetail> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: appBarWidget(text: 'Subject Details'),
@@ -67,9 +66,7 @@ class _TeacherSubjectDetail extends State<TeacherSubjectDetail> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 GestureDetector(
-                                  onTap: () {
-
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     width: 120,
                                     height: 36,
@@ -97,9 +94,7 @@ class _TeacherSubjectDetail extends State<TeacherSubjectDetail> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     width: 120,
                                     height: 36,

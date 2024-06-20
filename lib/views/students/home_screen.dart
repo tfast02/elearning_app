@@ -321,17 +321,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: subjectController.subjectListOfDay.length,
                       itemBuilder: (context, index) {
+                        var subject = subjectController.subjectListOfDay[index];
                         return GestureDetector(
                           onTap: () {
-                            Get.to(
-                              () => const SubjectDetailScreen(),
-                              arguments: subjectController.subjectList[index],
-                            );
+                            subjectController.sectionId.value = subject['id'];
+                            Get.to(() => const SubjectDetailScreen());
                           },
                           child: boxSubjectWidget(
-                            textSubject: subjectController.subjectListOfDay[index]['name'],
-                            textRoom: subjectController.subjectListOfDay[index]['room']
-                                + ' _ ' + subjectController.subjectListOfDay[index]['time'],
+                            textSubject: subject['name'],
+                            textRoom: '${subject['room']} _ ${subject['time']}',
                           ),
                         );
                       },

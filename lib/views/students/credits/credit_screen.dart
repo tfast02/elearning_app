@@ -27,7 +27,7 @@ class _CreditScreenState extends State<CreditScreen> {
               onTap: () {
                 Get.to(() => const RegisterCredit());
               },
-              child: boxTitleWidget(text: 'Register for credit'),
+              child: boxTitleWidget(text: 'Đăng ký tín chỉ'),
             ),
 
             const SizedBox(height: 24,),
@@ -35,7 +35,7 @@ class _CreditScreenState extends State<CreditScreen> {
               onTap: () {
                 Get.to(() => const LearningProgress());
               },
-              child: boxTitleWidget(text: 'Learning progress'),
+              child: boxTitleWidget(text: 'Tiến độ học tập'),
             ),
           ],
         ),

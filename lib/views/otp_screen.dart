@@ -1,19 +1,36 @@
 import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:vku_app/widgets/logo_widget.dart';
 import 'package:vku_app/widgets/text_widget.dart';
-import 'package:vku_app/views/new_password_screen.dart';
+import 'package:vku_app/controller/auth_controller.dart';
 
 class OTPScreen extends StatefulWidget {
-  const OTPScreen({super.key});
+  final String email;
+  final int role;
+  const OTPScreen({Key? key, required this.email, required this.role}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreen();
 }
 
 class _OTPScreen extends State<OTPScreen> {
+  final AuthController authController = Get.put(AuthController());
+  final List<TextEditingController> otpControllers = List.generate(6, (index) => TextEditingController());
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      authController.sendOTP(widget.email, widget.role);
+    });
+  }
+
+  String getOTP() {
+    return otpControllers.map((controller) => controller.text).join();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,15 +90,16 @@ class _OTPScreen extends State<OTPScreen> {
                           child: Material(
                             borderRadius: BorderRadius.circular(10),
                             color: const Color.fromRGBO(191, 191, 191, 0.5),
-                            child: const TextField(
+                            child: TextField(
+                              controller: otpControllers[index],
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               maxLength: 1,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 counterText: '',
                                 border: InputBorder.none,
                               ),
-                                style: TextStyle(fontSize: 24)
+                                style: const TextStyle(fontSize: 24)
                             ),
                           ),
                         ),
@@ -114,9 +132,10 @@ class _OTPScreen extends State<OTPScreen> {
                     ),
 
                     const SizedBox(height: 52),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => const NewPasswordScreen());
+                    Obx(() => ElevatedButton(
+                      onPressed: authController.isLoading.value ? null : () {
+                        String otp = getOTP();
+                        authController.verifyOTP(widget.email, otp, widget.role);
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF4FA0AB)),
@@ -127,7 +146,7 @@ class _OTPScreen extends State<OTPScreen> {
                           ),
                         ),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.symmetric(horizontal: 124, vertical: 24), // Tăng giá trị padding
+                          const EdgeInsets.symmetric(horizontal: 124, vertical: 24),
                         ),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -136,7 +155,7 @@ class _OTPScreen extends State<OTPScreen> {
                         ),
                       ),
                       child: const Text('Continue'),
-                    ),
+                    )),
                   ],
                 ),
               ),

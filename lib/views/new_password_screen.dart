@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vku_app/controller/auth_controller.dart';
 import 'package:vku_app/views/login_screen.dart';
 import 'package:vku_app/widgets/logo_widget.dart';
 import 'package:vku_app/widgets/text_widget.dart';
@@ -13,6 +14,7 @@ class NewPasswordScreen extends StatefulWidget {
 }
 
 class _NewPasswordScreen extends State<NewPasswordScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +66,7 @@ class _NewPasswordScreen extends State<NewPasswordScreen> {
                         hintText: 'Enter new password',
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.visibility),
-                          onPressed: () {
-                            // Your action when the eye icon is pressed
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ),
@@ -87,9 +87,7 @@ class _NewPasswordScreen extends State<NewPasswordScreen> {
                         hintText: 'Re-enter the password',
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.visibility),
-                          onPressed: () {
-                            // Your action when the eye icon is pressed
-                          },
+                          onPressed: () {},
                         ),
                       ),
                     ),

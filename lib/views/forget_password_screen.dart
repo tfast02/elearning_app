@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vku_app/views/otp_screen.dart';
+
 import 'package:vku_app/widgets/logo_widget.dart';
 import 'package:vku_app/widgets/text_widget.dart';
+import 'package:vku_app/controller/auth_controller.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -15,6 +15,8 @@ class ForgetPasswordScreen extends StatefulWidget {
 
 class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
   int selectedRadio = 1;
+  final AuthController authController = Get.put(AuthController());
+  final TextEditingController emailController = TextEditingController();
 
   setSelectedRadio(int val) {
     setState(() {
@@ -71,8 +73,9 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                           'Student',
                           style: GoogleFonts.roboto(
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xFF4FA0AB),
+                            fontWeight: selectedRadio == 1 ? FontWeight.w500 : FontWeight.w400,
+                            color: selectedRadio == 1 ? const Color(0xFF4FA0AB)
+                                : const Color.fromRGBO(127, 127, 127, 1),
                           ),
                         ),
                       ),
@@ -84,7 +87,12 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                         onChanged: (val) {
                           setSelectedRadio(val!);
                         },
-                        title: text127Widget(text: 'Teacher'),
+                        title: text127Widget(
+                          text: 'Teacher',
+                          fontWeight: selectedRadio == 2 ? FontWeight.w500 : FontWeight.w400,
+                          color: selectedRadio == 2 ? const Color(0xFF4FA0AB)
+                              : const Color.fromRGBO(127, 127, 127, 1),
+                        ),
                       ),
                     ),
                   ],
@@ -108,18 +116,22 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                         color: const Color(0xFF4FA0AB),
                       ),
                     ),
-                    const TextField(
-                      decoration: InputDecoration(
+                    TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
                         hintText: 'Enter your email',
                       ),
                     ),
 
                     // Button Continue
                     const SizedBox(height: 52),
-                    ElevatedButton(
-                      onPressed: () {
-                        Get.to(() => const OTPScreen());
-                      },
+                    Obx(() => ElevatedButton(
+                      onPressed: authController.isLoading.value
+                          ? null
+                          : () => authController.checkEmail(
+                        emailController.text.trim(),
+                        selectedRadio,
+                      ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF4FA0AB)),
                         textStyle: MaterialStateProperty.all<TextStyle>(
@@ -138,7 +150,7 @@ class _ForgetPasswordScreen extends State<ForgetPasswordScreen> {
                         ),
                       ),
                       child: const Text('Continue'),
-                    ),
+                    )),
                   ],
                 ),
               ),

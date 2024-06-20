@@ -2,7 +2,7 @@
     package="com.example.vku_app">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="vku_app"
+        android:label="Elearning VKU"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

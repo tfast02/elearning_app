@@ -32,7 +32,6 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
           padding:  const EdgeInsets.only(bottom: 20, left: 20, right: 20),
           child: Column(
             children:  <Widget>[
-
               // Line
               Padding(
                 padding: const EdgeInsets.only(left: 4, right: 4),
@@ -183,9 +182,7 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
                             padding: const EdgeInsets.only(top: 24, bottom: 24),
                             child: Center(
                               child: text64Widget(
-                                  text: outcomeController.replaceNull(
-                                      widget.scoreDetail['diligence'].toString()
-                                  ),
+                                  text: widget.scoreDetail['diligence']?.toString() ?? ''
                               ),
                             ),
                           ),
@@ -207,9 +204,7 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
                             padding: const EdgeInsets.only(top: 24, bottom: 24),
                             child: Center(
                               child: text64Widget(
-                                  text: outcomeController.replaceNull(
-                                      widget.scoreDetail['homework'].toString()
-                                  ),
+                                  text: widget.scoreDetail['homework']?.toString() ?? ''
                               ),
                             ),
                           ),
@@ -231,9 +226,7 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
                             padding: const EdgeInsets.only(top: 24, bottom: 24),
                             child: Center(
                               child: text64Widget(
-                                  text: outcomeController.replaceNull(
-                                      widget.scoreDetail['midterm'].toString()
-                                  ),
+                                  text: widget.scoreDetail['midterm']?.toString() ?? ''
                               ),
                             ),
                           ),
@@ -255,9 +248,7 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
                             padding: const EdgeInsets.only(top: 24, bottom: 24),
                             child: Center(
                               child: text64Widget(
-                                  text: outcomeController.replaceNull(
-                                      widget.scoreDetail['final'].toString()
-                                  ),
+                                  text: widget.scoreDetail['final']?.toString() ?? ''
                               ),
                             ),
                           ),
@@ -279,9 +270,7 @@ class _OutcomeDetailScreenState extends State<OutcomeDetailScreen> {
                             padding: const EdgeInsets.only(top: 24, bottom: 24),
                             child: Center(
                               child: text64Widget(
-                                  text: outcomeController.replaceNull(
-                                      widget.scoreDetail['full'].toString()
-                                  ),
+                                  text: widget.scoreDetail['full']?.toString() ?? ''
                               ),
                             ),
                           ),

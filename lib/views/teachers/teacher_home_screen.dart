@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:vku_app/views/teachers/score/teacher_score_screen.dart';
 
 import 'package:vku_app/widgets/box_widget.dart';
 import 'package:vku_app/widgets/logo_widget.dart';
@@ -238,7 +239,7 @@ class _TeacherHomeScreenState extends State<TeacherHomeScreen> {
                       // Outcomes
                       GestureDetector(
                         onTap: () {
-
+                          Get.to(() => const TeacherScoreScreen());
                         },
                         child: Column(
                           children: [

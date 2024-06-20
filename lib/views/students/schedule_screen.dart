@@ -162,10 +162,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                       return GestureDetector(
                         onTap: () {
-                          Get.to(
-                                () => const SubjectDetailScreen(),
-                            arguments: subjectController.subjectList[index],
-                          );
+                          subjectController.sectionId.value = subject['id'];
+                          Get.to(() => const SubjectDetailScreen());
                         },
                         child: boxSubjectWidget(
                           textSubject: name,
